@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-use App\Http\Controllers\PageController;
+use App\Http\Controllers\AuthController;
 
 Route::post('login', [AuthController::class, 'login']);
 
