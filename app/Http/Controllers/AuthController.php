@@ -27,9 +27,17 @@ class AuthController extends Controller
 
         $response = [
             'user' => $user,
-            'token' => $token
+            'token' => $token,
+            'id' => $user->id,
         ];
 
         return response($response, 201);
+    }
+
+    public function me(Request $request)
+    {
+        $user = auth('api')->user();
+
+        dd($user);
     }
 }
