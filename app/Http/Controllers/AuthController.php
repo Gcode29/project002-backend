@@ -2,30 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
         'email' => 'required|email',
-        'password' => 'required'
+        'password' => 'required',
+        'device_name' => 'required',
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (! $user || ! Hash::check($request->password, $user->password)) {
+        throw ValidationException::withMessages([
+            'email' => ['The provided credentials are incorrect.'],
         ]);
+    }
 
-        $user = User::where('email', $request->email)->first();
+    
+        $token = $user->createToken($request->device_name)->plainTextToken;
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response([
-                'message' => ['These credentials do not match our records.']
-            ], 404);
-        }
-
-        $token = $user->createToken('my-app-token')->plainTextToken;
-
-        $response = [
+            $response = [
             'user' => $user,
             'token' => $token,
             'id' => $user->id,
@@ -36,8 +40,15 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        $user = auth()->user();
+        return $request->user();
 
-        return response()->json($user);
+        // return response()->json($user);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        return response()->json('logout', 201);
     }
 }
