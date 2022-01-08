@@ -32,30 +32,30 @@ it('shows a specifc category', function () {
     actingAs($this->user)->getJson(route('categories.show', [
         'category' => Category::first()->id,
     ]))
-        ->assertOk()
-        ->assertJsonStructure([
-            'data' => [
-                'id',
-                'name',
-                'created_at',
-                'updated_at',
-            ],
-        ]);
+    ->assertOk()
+    ->assertJsonStructure([
+        'data' => [
+            'id',
+            'name',
+            'created_at',
+            'updated_at',
+        ],
+    ]);
 });
 
 it('can create a category', function () {
     actingAs($this->user)->postJson(route('categories.store'), [
         'name' => 'New Category',
     ])
-        ->assertCreated()
-        ->assertJsonStructure([
-            'data' => [
-                'id',
-                'name',
-                'created_at',
-                'updated_at',
-            ],
-        ]);
+    ->assertCreated()
+    ->assertJsonStructure([
+        'data' => [
+            'id',
+            'name',
+            'created_at',
+            'updated_at',
+        ],
+    ]);
 });
 
 it('can update a category', function () {
@@ -64,51 +64,51 @@ it('can update a category', function () {
     ]), [
         'name' => 'New Category',
     ])
-        ->assertOk()
-        ->assertJsonFragment([
-            'name' => 'New Category',
-        ]);
+    ->assertOk()
+    ->assertJsonFragment([
+        'name' => 'New Category',
+    ]);
 });
 
 it('can delete a category', function () {
     actingAs($this->user)->deleteJson(route('categories.destroy', [
         'category' => Category::first()->id,
     ]))
-        ->assertNoContent();
+    ->assertNoContent();
 });
 
 it('throws an error when creating a category with an invalid name', function () {
     actingAs($this->user)->postJson(route('categories.store'), [
         'name' => '',
     ])
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['name']);
+    ->assertStatus(422)
+    ->assertJsonValidationErrors(['name']);
 });
 
 it('throws an error when creating an existing category', function () {
     actingAs($this->user)->postJson(route('categories.store'), [
         'name' => Category::first()->name,
     ])
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['name']);
+    ->assertStatus(422)
+    ->assertJsonValidationErrors(['name']);
 });
 
 it('throws an error when updating a category with an invalid name', function () {
-    actingAs($this->user)->patchJson(route('categories.update', [
+    actingAs($this->user)->putJson(route('categories.update', [
         'category' => Category::first()->id,
     ]), [
         'name' => '',
     ])
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['name']);
+    ->assertStatus(422)
+    ->assertJsonValidationErrors(['name']);
 });
 
 it('throws an error when updating an existing category', function () {
     $category = Category::factory()->create();
 
-    actingAs($this->user)->patchJson(route('categories.update', $category), [
+    actingAs($this->user)->putJson(route('categories.update', $category), [
         'name' => Category::first()->name,
     ])
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['name']);
+    ->assertStatus(422)
+    ->assertJsonValidationErrors(['name']);
 });
