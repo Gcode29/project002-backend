@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\UOMController;
+use App\Http\Controllers\SupplierController;
 
 Route::post('login', [AuthController::class, 'store'])->name('login');
 
@@ -17,4 +18,5 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('brands', BrandController::class);
     Route::apiResource('uoms', UOMController::class);
+    Route::apiResource('suppliers', SupplierController::class);
 });
