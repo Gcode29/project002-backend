@@ -114,6 +114,8 @@ it('throws an error when updating an existing location', function () {
     $location = Location::factory()->create();
 
     authenticated()
-        ->putJson(route('locations.update', Location::first()), $location->toArray())
+        ->putJson(route('locations.update', $location), [
+            'name' => Location::first()->name,
+        ])
         ->assertJsonValidationErrors(['name']);
 });
