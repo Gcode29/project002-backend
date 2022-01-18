@@ -11,6 +11,10 @@
 |
 */
 
+use Tests\TestCase;
+use App\Models\User;
+
+
 uses(Tests\TestCase::class)->in('Feature');
 
 /*
@@ -39,7 +43,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function authenticated(?string $driver = null): TestCase
 {
-    // ..
+    return test()->actingAs(User::factory()->create(), $driver);
 }
