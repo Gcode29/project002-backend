@@ -9,6 +9,7 @@ use App\Http\Controllers\UOMController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\DeliveryController;
 
 Route::post('login', [AuthController::class, 'store'])->name('login');
 
@@ -23,4 +24,5 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::apiResource('suppliers', SupplierController::class);
     Route::apiResource('locations', LocationController::class);
     Route::apiResource('products', ProductController::class);
+    Route::apiResource('deliveries', DeliveryController::class);
 });

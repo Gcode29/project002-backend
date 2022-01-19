@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Delivery;
+use App\Models\Transaction;
 
 class DeliveryFactory extends Factory
 {
@@ -14,7 +17,17 @@ class DeliveryFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'supplier_id' => Supplier::factory(),
+            'dr_number' => $this->faker->randomNumber(6),
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Delivery $delivery) {
+            $delivery->transactions()->saveMany(
+                Transaction::factory()->count(3)->make()
+            );
+        });
     }
 }
