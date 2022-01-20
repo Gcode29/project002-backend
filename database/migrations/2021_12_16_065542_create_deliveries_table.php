@@ -21,6 +21,7 @@ class CreateDeliveriesTable extends Migration
             $table->string('dr_number');
             $table->foreignIdFor(User::class, 'received_by')->nullable()->unsigned()->index();
             $table->dateTime('received_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

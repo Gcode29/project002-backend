@@ -3,8 +3,10 @@
 use App\Models\Delivery;
 use App\Models\Product;
 
-use function Pest\Laravel\getJson;
+use function Pest\Laravel\{getJson, assertSoftDeleted};
 use function Pest\Faker\faker;
+
+use App\Models\Transaction;
 
 beforeEach(function () {
     Delivery::factory()->count(10)->create();
@@ -92,8 +94,6 @@ it('can update a delivery', function () {
 
     $payload = $delivery->toArray();
 
-    ray($delivery->transactions);
-
     $items = $delivery->transactions->map(function ($item) {
         return [
             'product_id' => $item->product_id,
@@ -103,7 +103,7 @@ it('can update a delivery', function () {
     });
 
     $payload = array_merge($payload, [
-        'items' => $items->toArray(),
+        'items' => $items->toArray()
     ]);
 
     authenticated()
@@ -120,6 +120,23 @@ it('can update a delivery', function () {
                 'created_at',
                 'updated_at',
             ],
-        ])
-        ->ray();
+        ]);
+
+    collect($delivery->transactions)->each(function (Transaction $transaction) {
+        assertSoftDeleted('transactions', [
+            'id' => $transaction->id,
+        ]);
+    });
+});
+
+it('can delete a delivery', function () {
+    $delivery = Delivery::first();
+
+    authenticated()
+        ->deleteJson(route('deliveries.destroy', $delivery))
+        ->assertNoContent();
+
+    assertSoftDeleted('deliveries', [
+        'id' => $delivery->id,
+    ]);
 });

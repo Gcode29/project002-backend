@@ -94,6 +94,8 @@ class DeliveryController extends Controller
      */
     public function destroy(Delivery $delivery)
     {
-        //
+        $delivery->delete();
+
+        return response()->noContent();
     }
 }

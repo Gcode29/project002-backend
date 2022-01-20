@@ -20,6 +20,7 @@ class CreateTransactionsTable extends Migration
             $table->foreignIdFor(Product::class)->unsigned()->index();
             $table->bigInteger('quantity');
             $table->bigInteger('price');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
