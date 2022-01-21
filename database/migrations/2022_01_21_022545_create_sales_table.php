@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Product;
 
-class CreateTransactionsTable extends Migration
+class CreateSalesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,12 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->morphs('transactable');
-            $table->foreignIdFor(Product::class)->unsigned()->index();
-            $table->bigInteger('quantity');
-            $table->bigInteger('price');
+            $table->string('invoice')->nullable();
+            $table->string('or_number')->nullable();
+            $table->foreignIdFor(User::class, 'sold_by')->nullable()->unsigned()->index();
+            $table->dateTime('sold_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ class CreateTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('sales');
     }
 }

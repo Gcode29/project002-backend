@@ -2,14 +2,17 @@
 
 use App\Models\Delivery;
 use App\Models\Product;
+use App\Models\Transaction;
 
 use function Pest\Laravel\{getJson, assertSoftDeleted};
 use function Pest\Faker\faker;
 
-use App\Models\Transaction;
 
 beforeEach(function () {
-    Delivery::factory()->count(10)->create();
+    Delivery::factory()
+        ->has(Transaction::factory()->count(3))
+        ->count(10)
+        ->create();
 });
 
 it('throws an error when the user is not authenticated', function () {

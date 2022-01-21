@@ -19,7 +19,12 @@ class Transaction extends Model
         'price'
     ];
 
-    public function transactionable(): MorphTo
+    protected $casts = [
+        'quantity' => 'integer',
+        'price' => 'float'
+    ];
+
+    public function transactable(): MorphTo
     {
         return $this->morphTo();
     }

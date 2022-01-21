@@ -4,18 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Delivery extends Model
+class Sale extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
-        'supplier_id',
-        'dr_number',
+        'invoice',
+        'or_number',
     ];
 
     public function transactions(): MorphMany
@@ -23,8 +22,13 @@ class Delivery extends Model
         return $this->morphMany(Transaction::class, 'transactable');
     }
 
-    public function supplier(): BelongsTo
+    public static function boot(): void
     {
-        return $this->belongsTo(Supplier::class);
+        parent::boot();
+
+        static::saving(function ($model) {
+            $model->sold_by = auth()->id();
+            $model->sold_at = now();
+        });
     }
 }

@@ -15,7 +15,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate();
+        $products = Product::query();
+
+        $products->when(request()->has('stocks'), function ($query) {
+            $query->withSum('transactions as stocks', 'quantity');
+        });
+
+        $products = $products->paginate();
 
         return ProductResource::collection($products);
     }

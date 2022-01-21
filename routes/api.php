@@ -10,6 +10,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\SaleController;
 
 Route::post('login', [AuthController::class, 'store'])->name('login');
 
@@ -25,4 +26,5 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::apiResource('locations', LocationController::class);
     Route::apiResource('products', ProductController::class);
     Route::apiResource('deliveries', DeliveryController::class);
+    Route::apiResource('sales', SaleController::class);
 });
