@@ -30,5 +30,9 @@ class Sale extends Model
             $model->sold_by = auth()->id();
             $model->sold_at = now();
         });
+
+        static::deleting(function ($model) {
+            $model->transactions()->delete();
+        });
     }
 }

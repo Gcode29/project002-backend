@@ -6,6 +6,7 @@ use App\Models\Sale;
 use App\Models\Transaction;
 
 use function Pest\Faker\faker;
+use function Pest\Laravel\assertSoftDeleted;
 use function PHPUnit\Framework\assertEquals;
 
 beforeEach(function () {
@@ -94,5 +95,76 @@ it('can create a sale', function () {
     assertEquals(
         Product::withSum('transactions as stocks', 'quantity')->first()->stocks,
         90
+    );
+});
+
+it('can update a sale', function () {
+    $sale = Sale::factory()
+        ->has(Transaction::factory()->state([
+            'product_id' => Product::first()->id,
+            'quantity' => -10,
+            'price' => faker()->randomNumber(2),
+        ]))
+        ->create();
+
+    assertEquals(
+        Product::withSum('transactions as stocks', 'quantity')->first()->stocks,
+        90
+    );
+
+    $payload = $sale->toArray();
+
+    $payload = array_merge($payload, [
+        'items' => [
+            [
+                'product_id' => Product::first()->id,
+                'quantity' => 20,
+                'price' => faker()->randomNumber(2),
+            ]
+        ],
+    ]);
+
+    authenticated()
+        ->putJson(route('sales.update', $sale), $payload)
+        ->assertOk()
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'invoice',
+                'or_number',
+                'created_at',
+                'updated_at',
+            ],
+        ]);
+
+    assertEquals(
+        Product::withSum('transactions as stocks', 'quantity')->first()->stocks,
+        80
+    );
+});
+
+it('can delete a sale', function () {
+    $sale = Sale::factory()
+        ->has(Transaction::factory()->state([
+            'product_id' => Product::first()->id,
+            'quantity' => -10,
+            'price' => faker()->randomNumber(2),
+        ]))
+        ->create();
+
+    assertEquals(
+        Product::withSum('transactions as stocks', 'quantity')->first()->stocks,
+        90
+    );
+
+    authenticated()
+        ->deleteJson(route('sales.destroy', $sale))
+        ->assertNoContent();
+
+    assertSoftDeleted('sales', ['id' => $sale->id]);
+
+    assertEquals(
+        Product::withSum('transactions as stocks', 'quantity')->first()->stocks,
+        100
     );
 });

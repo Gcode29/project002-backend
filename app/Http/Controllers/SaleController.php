@@ -67,7 +67,23 @@ class SaleController extends Controller
      */
     public function update(SaleRequest $request, Sale $sale)
     {
-        //
+        $sale->update($request->validated());
+
+        $sale->transactions()->delete();
+
+        $items = collect($request->items)
+            ->map(fn ($item) =>
+                new Transaction([
+                    'product_id' => $item['product_id'],
+                    'quantity' => -abs($item['quantity']),
+                    'price' => $item['price'],
+                ])
+            )
+            ->all();
+
+        $sale->transactions()->saveMany($items);
+
+        return new SaleResource($sale->load('transactions'));
     }
 
     /**
@@ -78,6 +94,8 @@ class SaleController extends Controller
      */
     public function destroy(Sale $sale)
     {
-        //
+        $sale->delete();
+
+        return response()->noContent();
     }
 }
