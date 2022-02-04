@@ -23,7 +23,7 @@ class CreateProductsTable extends Migration
             $table->foreignIdFor(UOM::class)->unsigned()->index();
             $table->string('code');
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

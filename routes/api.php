@@ -13,6 +13,7 @@ use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\SaleController;
 
 Route::post('login', [AuthController::class, 'store'])->name('login');
+Route::post('register', [AuthController::class, 'register']);
 
 
 Route::group(['middleware' => 'auth:sanctum'], function() {

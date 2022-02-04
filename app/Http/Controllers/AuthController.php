@@ -20,7 +20,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken($request->device_name)->plainTextToken;
+        $token = $user->createToken($request->header('user_agent'))->plainTextToken;
 
         $response = [
             'user' => $user,
@@ -29,6 +29,19 @@ class AuthController extends Controller
         ];
 
         return response($response, 201);
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'fullname' => ['required'],
+            'username' => ['required'],
+            'password' => ['required']
+        ]);
+
+        $user = User::create($request->all());
+
+        return response()->json($user);
     }
 
     public function me(): User

@@ -13,10 +13,10 @@ beforeEach(function () {
     $product = Product::factory()->create();
 
     Delivery::factory()
-        ->has(Transaction::factory()->state([
+        ->has(Transaction::factory()->count(2)->state([
             'product_id' => $product->id,
-            'quantity' => 100,
-            'price' => faker()->randomNumber(2),
+            'quantity' => 50,
+            'price' => faker()->numberBetween(0.01, 1000),
         ]))
         ->create();
 });
@@ -43,7 +43,7 @@ it('shows a specific sale', function () {
         ->has(Transaction::factory()->state([
             'product_id' => Product::first()->id,
             'quantity' => -10,
-            'price' => faker()->randomNumber(2),
+            'price' => faker()->numberBetween(0.01, 1000),
         ]))
         ->create();
 
@@ -67,6 +67,8 @@ it('shows a specific sale', function () {
 });
 
 it('can create a sale', function () {
+    ray(Product::with('transactions')->first());
+
     $payload = Sale::factory()->make();
 
     $payload = array_merge($payload->toArray(), [
@@ -74,7 +76,7 @@ it('can create a sale', function () {
             [
                 'product_id' => Product::first()->id,
                 'quantity' => 10,
-                'price' => faker()->randomNumber(2),
+                'price' => faker()->numberBetween(0.01, 1000),
             ]
         ],
     ]);
@@ -103,7 +105,7 @@ it('can update a sale', function () {
         ->has(Transaction::factory()->state([
             'product_id' => Product::first()->id,
             'quantity' => -10,
-            'price' => faker()->randomNumber(2),
+            'price' => faker()->numberBetween(0.01, 1000),
         ]))
         ->create();
 
@@ -119,7 +121,7 @@ it('can update a sale', function () {
             [
                 'product_id' => Product::first()->id,
                 'quantity' => 20,
-                'price' => faker()->randomNumber(2),
+                'price' => faker()->numberBetween(0.01, 1000),
             ]
         ],
     ]);
@@ -148,7 +150,7 @@ it('can delete a sale', function () {
         ->has(Transaction::factory()->state([
             'product_id' => Product::first()->id,
             'quantity' => -10,
-            'price' => faker()->randomNumber(2),
+            'price' => faker()->numberBetween(0.01, 1000),
         ]))
         ->create();
 

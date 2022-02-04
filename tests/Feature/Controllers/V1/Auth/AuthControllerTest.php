@@ -16,7 +16,6 @@ it('can authenticate a user', function () {
     postJson(route('login'), [
         'email' => $user->email,
         'password' => 'password',
-        'device_name' => 'device_name',
     ])->assertStatus(201);
 });
 
@@ -28,7 +27,6 @@ it('returns the user information when authenticated', function () {
     $response = getJson(route('me'))->json();
 
     expect($user)
-        ->full_name->toEqual($response['full_name'])
         ->email->toEqual($response['email']);
 });
 
