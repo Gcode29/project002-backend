@@ -6,6 +6,8 @@ use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class CategoryController extends Controller
 {
@@ -16,7 +18,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(request()->per_page);
+        $categories = QueryBuilder::for(Category::class)
+            ->allowedFilters(
+                AllowedFilter::partial('name'),
+            )
+            ->allowedSorts('name')
+            ->defaultSort('-name')
+            ->paginate(request()->per_page);
 
         return CategoryResource::collection($categories);
     }

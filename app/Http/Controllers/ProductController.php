@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Support\QueryBuilder\AggregateInclude;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedInclude;
+use Spatie\QueryBuilder\AllowedSort;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ProductController extends Controller
 {
@@ -15,13 +20,25 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::query();
-
-        $products->when(request()->has('stocks'), function ($query) {
-            $query->withSum('transactions as stocks', 'quantity');
-        });
-
-        $products = $products->paginate();
+        $products = QueryBuilder::for(Product::class)
+            ->allowedIncludes(
+                'category',
+                'brand',
+                'uom',
+                AllowedInclude::custom('stocks', new AggregateInclude('quantity', 'sum'), 'transactions as stocks')
+            )
+            ->allowedFilters(
+                AllowedFilter::partial('code'),
+                AllowedFilter::partial('category', 'category.name'),
+                AllowedFilter::partial('brand', 'brand.name'),
+                AllowedFilter::partial('uom', 'uom.long_name'),
+            )
+            ->allowedSorts(
+                AllowedSort::field('category', 'category.name'),
+                AllowedSort::field('brand', 'brand.name'),
+                AllowedSort::field('uom', 'uom.long_name'),
+            )
+            ->paginate(request()->per_page);
 
         return ProductResource::collection($products);
     }
