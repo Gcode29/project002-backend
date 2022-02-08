@@ -29,6 +29,7 @@ class ProductController extends Controller
             )
             ->allowedFilters(
                 AllowedFilter::partial('code'),
+                AllowedFilter::partial('name'),
                 AllowedFilter::partial('category', 'category.name'),
                 AllowedFilter::partial('brand', 'brand.name'),
                 AllowedFilter::partial('uom', 'uom.long_name'),

@@ -6,6 +6,8 @@ use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Requests\SupplierRequest;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class SupplierController extends Controller
 {
@@ -16,7 +18,11 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = Supplier::paginate(10);
+        $suppliers = QueryBuilder::for(Supplier::class)
+            ->allowedFilters(
+                AllowedFilter::partial('name'),
+            )
+            ->paginate(request()->page_page);
 
         return SupplierResource::collection($suppliers);
     }

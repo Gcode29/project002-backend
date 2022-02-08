@@ -16,12 +16,17 @@ class Product extends Model
         'brand_id',
         'u_o_m_id',
         'code',
+        'unique_name',
         'name',
+        'size',
+        'color',
+        'selling_price',
         'description',
     ];
 
     protected $casts = [
         'stocks' => 'integer',
+        'selling_price' => 'float',
     ];
 
     public function transactions(): HasMany
@@ -42,5 +47,14 @@ class Product extends Model
     public function uom(): BelongsTo
     {
         return $this->belongsTo(UOM::class, 'u_o_m_id');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->unique_name = "{$model->category->name} {$model->brand->name} {$model->name} {$model->color} {$model->size} {$model->uom->name}";
+        });
     }
 }

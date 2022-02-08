@@ -11,6 +11,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\UserController;
 
 Route::post('login', [AuthController::class, 'store'])->name('login');
 Route::post('register', [AuthController::class, 'register']);
@@ -20,6 +21,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('me', [AuthController::class, 'me'])->name('me');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::apiResource('users', UserController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('brands', BrandController::class);
     Route::apiResource('uoms', UOMController::class);

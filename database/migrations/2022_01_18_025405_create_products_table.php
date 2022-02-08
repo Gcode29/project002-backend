@@ -21,8 +21,12 @@ class CreateProductsTable extends Migration
             $table->foreignIdFor(Category::class)->unsigned()->index();
             $table->foreignIdFor(Brand::class)->unsigned()->index();
             $table->foreignIdFor(UOM::class)->unsigned()->index();
-            $table->string('code');
+            $table->string('code')->nullable();
+            $table->string('unique_name');
             $table->string('name');
+            $table->string('color')->nullable();
+            $table->string('size')->nullable();
+            $table->decimal('selling_price', 8, 2)->default(0);
             $table->text('description')->nullable();
             $table->timestamps();
         });

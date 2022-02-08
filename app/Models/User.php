@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
@@ -51,5 +52,14 @@ class User extends Authenticatable
     protected function password(): Attribute
     {
         return new Attribute(set: fn (string $value) => Hash::make($value));
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function (User $user) {
+            $this->full_name = "$user->first_name $user->last_name";
+        });
     }
 }
