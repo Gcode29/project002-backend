@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Product;
 
 class TransactionFactory extends Factory
 {
@@ -14,7 +15,9 @@ class TransactionFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'product_id' => Product::factory(),
+            'quantity' => $this->faker->randomNumber(2),
+            'price' => $this->faker->randomNumber(2),
         ];
     }
 }
