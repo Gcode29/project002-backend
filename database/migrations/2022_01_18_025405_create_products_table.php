@@ -23,7 +23,7 @@ class CreateProductsTable extends Migration
             $table->foreignIdFor(UOM::class)->unsigned()->index();
             $table->string('code')->nullable();
             $table->string('unique_name');
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('color')->nullable();
             $table->string('size')->nullable();
             $table->decimal('selling_price', 8, 2)->default(0);

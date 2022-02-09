@@ -37,12 +37,9 @@ class ProductRequest extends FormRequest
                 'required',
                 Rule::exists('u_o_m_s', 'id'),
             ],
-            'code' => [
-                'required',
-                Rule::unique('products')->ignore($this->product),
-            ],
-            'name' => [
-                'required',
+            // make uniquename unique products table
+            'unique_name' => [
+                'required|unique',
                 Rule::unique('products')->ignore($this->product),
             ],
             'description' => ['sometimes', 'nullable'],
