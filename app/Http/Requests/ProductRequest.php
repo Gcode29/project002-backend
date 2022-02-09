@@ -40,12 +40,10 @@ class ProductRequest extends FormRequest
             'code' => [
                 'sometimes',
                 'nullable',
-                Rule::unique('products')->ignore($this->product),
             ],
             'name' => [
                 'sometimes',
                 'nullable',
-                Rule::unique('products')->ignore($this->product),
             ],
             'description' => ['sometimes', 'nullable'],
         ];

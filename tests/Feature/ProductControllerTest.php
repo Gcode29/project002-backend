@@ -25,7 +25,7 @@ it('shows the products', function () {
                 '*' => [
                     'id',
                     'code',
-                    'name',
+                    'unique_name',
                     'description',
                     'created_at',
                     'updated_at',
@@ -44,7 +44,7 @@ it('shows a specific product', function () {
             'data' => [
                 'id',
                 'code',
-                'name',
+                'unique_name',
                 'description',
                 'created_at',
                 'updated_at',
@@ -68,7 +68,7 @@ it('can create a product', function () {
             'data' => [
                 'id',
                 'code',
-                'name',
+                'unique_name',
                 'description',
                 'created_at',
                 'updated_at',
@@ -92,7 +92,7 @@ it('can update a product', function () {
             'data' => [
                 'id',
                 'code',
-                'name',
+                'unique_name',
                 'description',
                 'created_at',
                 'updated_at',
@@ -117,8 +117,6 @@ it('throws an error when creating a product with invalid data', function () {
         ->postJson(route('products.store'), [])
         ->assertStatus(422)
         ->assertJsonValidationErrors([
-            'code',
-            'name',
             'category_id',
             'brand_id',
             'u_o_m_id',
@@ -149,8 +147,6 @@ it('throws an error when updating a product with invalid data', function () {
         ->putJson(route('products.update', Product::first()), [])
         ->assertStatus(422)
         ->assertJsonValidationErrors([
-            'code',
-            'name',
             'category_id',
             'brand_id',
             'u_o_m_id',
