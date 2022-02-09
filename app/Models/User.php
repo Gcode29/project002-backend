@@ -59,7 +59,7 @@ class User extends Authenticatable
         parent::boot();
 
         static::saving(function (User $user) {
-            $this->full_name = "$user->first_name $user->last_name";
+            $user->full_name = trim_whitespaces("$user->first_name $user->middle_name $user->last_name");
         });
     }
 }
