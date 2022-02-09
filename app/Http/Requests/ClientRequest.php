@@ -28,6 +28,14 @@ class ClientRequest extends FormRequest
             'client_name' => [
                 'required'
             ],
+            'address' => [
+                'sometimes',
+                'nullable',
+            ],
+            'contact' => [
+                'sometimes',
+                'nullable',
+            ],
             'business_name' => [
                 'required',
                 Rule::unique('clients')->ignore($this->client),
