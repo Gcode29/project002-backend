@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DeliveryFactory extends Factory
@@ -14,7 +15,8 @@ class DeliveryFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'supplier_id' => Supplier::factory(),
+            'dr_number' => $this->faker->randomNumber(6),
         ];
     }
 }
