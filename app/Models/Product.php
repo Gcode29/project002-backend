@@ -53,8 +53,8 @@ class Product extends Model
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            $model->unique_name = "{$model->category->name} {$model->brand->name} {$model->name} {$model->color} {$model->size} {$model->uom->name}";
+        static::creating(function (Product $model) {
+            $model->unique_name = trim_whitespaces("$model->category->name $model->brand->name $model->name $model->color $model->size $model->uom->short_name");
         });
     }
 }

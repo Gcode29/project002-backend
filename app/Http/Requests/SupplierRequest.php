@@ -30,8 +30,8 @@ class SupplierRequest extends FormRequest
                 Rule::unique('suppliers')->ignore($this->supplier),
             ],
             'address' => ['required'],
-            // 'contact_person' => ['required'],
-            // 'contact_number' => ['required'],
+            'contact_person' => ['sometimes', 'nullable'],
+            'contact_number' => ['sometimes', 'nullable'],
         ];
     }
 }

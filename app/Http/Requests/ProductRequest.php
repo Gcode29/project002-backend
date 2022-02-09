@@ -37,14 +37,14 @@ class ProductRequest extends FormRequest
                 'required',
                 Rule::exists('u_o_m_s', 'id'),
             ],
-            // 'code' => [
-            //     'required',
-            //     Rule::unique('products')->ignore($this->product),
-            // ],
-            // 'name' => [
-            //     'required',
-            //     Rule::unique('products')->ignore($this->product),
-            // ],
+            'code' => [
+                'sometimes',
+                'nullable',
+            ],
+            'name' => [
+                'sometimes',
+                'nullable',
+            ],
             'description' => ['sometimes', 'nullable'],
         ];
     }
