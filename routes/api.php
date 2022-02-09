@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\UOMController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\LocationController;
@@ -30,4 +31,5 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::apiResource('products', ProductController::class);
     Route::apiResource('deliveries', DeliveryController::class);
     Route::apiResource('sales', SaleController::class);
+    Route::apiResource('clients', ClientController::class);
 });
