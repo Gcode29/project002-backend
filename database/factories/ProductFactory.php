@@ -22,6 +22,7 @@ class ProductFactory extends Factory
             'u_o_m_id' => UOM::factory(),
             'code' => $this->faker->unique()->ean8,
             'name' => $this->faker->unique()->word,
+            'selling_price' => $this->faker->randomFloat(2, 0, 100),
             'description' => $this->faker->text,
         ];
     }

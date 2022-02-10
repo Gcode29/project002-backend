@@ -31,7 +31,7 @@ class DeliveryRequest extends FormRequest
             ],
             'dr_number' => ['required'],
             'received_at' => ['sometimes', 'nullable', 'date'],
-            'received_by' => ['required'],
+            'received_by' => ['required', Rule::exists('users', 'id')],
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_id' => [
                 'required',

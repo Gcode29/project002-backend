@@ -33,13 +33,4 @@ class Transaction extends Model
     {
         return $this->belongsTo(Product::class);
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function (Transaction $model) {
-            $model->sold_by = auth()->user()->id;
-        });
-    }
 }
