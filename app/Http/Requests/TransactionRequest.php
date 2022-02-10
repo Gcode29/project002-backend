@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
-class DeliveryRequest extends FormRequest
+class TransactionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,13 +25,10 @@ class DeliveryRequest extends FormRequest
     public function rules()
     {
         return [
-            'supplier_id' => [
-                'required',
-                Rule::exists('suppliers', 'id'),
-            ],
-            'dr_number' => ['required'],
+            'dr_number' => ['sometimes', 'nullable'],
+            'invoice' => ['required'],
+            'sold_by' => Auth()->user()->id,
             'received_at' => ['sometimes', 'nullable', 'date'],
-            'received_by' => ['required'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_id' => [
                 'required',

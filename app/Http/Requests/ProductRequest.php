@@ -37,6 +37,9 @@ class ProductRequest extends FormRequest
                 'required',
                 Rule::exists('u_o_m_s', 'id'),
             ],
+            'selling_price' => [
+                'required',
+            ],
             'code' => [
                 'sometimes',
                 'nullable',

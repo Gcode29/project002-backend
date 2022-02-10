@@ -5,12 +5,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\UOMController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 
 Route::post('login', [AuthController::class, 'store'])->name('login');
@@ -30,4 +32,6 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::apiResource('products', ProductController::class);
     Route::apiResource('deliveries', DeliveryController::class);
     Route::apiResource('sales', SaleController::class);
+    Route::apiResource('clients', ClientController::class);
+    Route::apiResource('transactions', TransactionController::class);
 });

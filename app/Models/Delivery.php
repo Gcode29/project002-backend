@@ -16,6 +16,8 @@ class Delivery extends Model
     protected $fillable = [
         'supplier_id',
         'dr_number',
+        'received_by',
+        'received_at'
     ];
 
     public function transactions(): MorphMany
