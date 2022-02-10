@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CheckAvailableQuantity;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -32,7 +33,7 @@ class SaleRequest extends FormRequest
                 'required',
                 Rule::exists('products', 'id'),
             ],
-            'items.*.quantity' => ['required', 'numeric', 'min:1'],
+            'items.*.quantity' => ['required', 'numeric', 'min:1', new CheckAvailableQuantity($this->input('items.*.product_id'))],
             'items.*.price' => ['required', 'numeric', 'min:0.1'],
         ];
     }

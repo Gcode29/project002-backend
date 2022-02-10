@@ -16,6 +16,7 @@ class Delivery extends Model
     protected $fillable = [
         'supplier_id',
         'dr_number',
+        'received_by',
     ];
 
     public function transactions(): MorphMany
@@ -26,5 +27,10 @@ class Delivery extends Model
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function receiver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'received_by');
     }
 }

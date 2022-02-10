@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\DeliveryRequest;
 use App\Http\Resources\DeliveryResource;
 use App\Models\Transaction;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class DeliveryController extends Controller
 {
@@ -17,7 +18,9 @@ class DeliveryController extends Controller
      */
     public function index()
     {
-        $deliveries = Delivery::with('supplier')->paginate();
+        $deliveries = QueryBuilder::for(Delivery::class)
+            ->allowedIncludes(['transactions', 'transactions.product.uom', 'supplier', 'receiver'])
+            ->paginate(request()->per_page);
 
         return DeliveryResource::collection($deliveries);
     }

@@ -7,6 +7,7 @@ use App\Models\Sale;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleRequest;
 use App\Models\Transaction;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class SaleController extends Controller
 {
@@ -17,7 +18,9 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $sales = Sale::paginate();
+        $sales = QueryBuilder::for(Sale::class)
+            ->allowedIncludes(['transactions', 'transactions.product'])
+            ->paginate(request()->per_page);
 
         return SaleResource::collection($sales);
     }

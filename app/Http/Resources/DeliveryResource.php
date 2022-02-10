@@ -16,10 +16,10 @@ class DeliveryResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'receiver' => UserResource::make($this->whenLoaded('receiver')),
             'supplier' => SupplierResource::make($this->whenLoaded('supplier')),
             'items' => TransactionResource::collection($this->whenLoaded('transactions')),
             'dr_number' => $this->dr_number,
-            'received_by' => $this->received_by,
             'received_at' => $this->received_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at

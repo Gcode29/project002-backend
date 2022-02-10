@@ -67,8 +67,6 @@ it('shows a specific sale', function () {
 });
 
 it('can create a sale', function () {
-    ray(Product::with('transactions')->first());
-
     $payload = Sale::factory()->make();
 
     $payload = array_merge($payload->toArray(), [
@@ -169,4 +167,29 @@ it('can delete a sale', function () {
         Product::withSum('transactions as stocks', 'quantity')->first()->stocks,
         100
     );
+});
+
+it('validates the product quantity', function () {
+    $payload = Sale::factory()->make();
+
+    $payload = array_merge($payload->toArray(), [
+        'items' => [
+            [
+                'product_id' => Product::first()->id,
+                'quantity' => 101,
+                'price' => faker()->numberBetween(0.01, 1000),
+            ]
+        ],
+    ]);
+
+    authenticated()->postJson(route('sales.store'), $payload)
+        ->assertStatus(422)
+        ->assertJsonValidationErrors('items.0.quantity')
+        ->assertJson([
+            'errors' => [
+                'items.0.quantity' => [
+                    'The items.0.quantity quantity is not available.',
+                ],
+            ]
+        ]);
 });
