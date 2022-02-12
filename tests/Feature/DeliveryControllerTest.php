@@ -4,7 +4,7 @@ use App\Models\Delivery;
 use App\Models\Product;
 use App\Models\Transaction;
 
-use function Pest\Laravel\{getJson, assertSoftDeleted};
+use function Pest\Laravel\{assertDatabaseHas, getJson, assertSoftDeleted};
 use function Pest\Faker\faker;
 
 
@@ -22,7 +22,9 @@ it('throws an error when the user is not authenticated', function () {
 
 it('shows the deliveries', function () {
     authenticated()
-        ->getJson(route('deliveries.index'))
+        ->getJson(route('deliveries.index', [
+            'include' => ['transactions.product.uom', 'supplier', 'receiver'],
+        ]))
         ->assertOk()
         ->assertJsonStructure([
             'data' => [
@@ -30,7 +32,7 @@ it('shows the deliveries', function () {
                     'id',
                     'supplier',
                     'dr_number',
-                    'received_by',
+                    'receiver',
                     'received_at',
                     'created_at',
                     'updated_at',
@@ -48,7 +50,6 @@ it('can show a specific delivery', function () {
                 'id',
                 'supplier',
                 'dr_number',
-                'received_by',
                 'received_at',
                 'created_at',
                 'updated_at',
@@ -82,7 +83,7 @@ it('can create a delivery', function () {
                 'supplier',
                 'items',
                 'dr_number',
-                'received_by',
+                'receiver',
                 'received_at',
                 'created_at',
                 'updated_at',
@@ -99,14 +100,23 @@ it('can update a delivery', function () {
 
     $items = $delivery->transactions->map(function ($item) {
         return [
+            'id' => $item->id,
             'product_id' => $item->product_id,
             'quantity' => faker()->numberBetween(1, 10),
-            'price' => faker()->numberBetween(1, 10),
+            'price' => $item->price,
         ];
     });
 
+    $items = array_merge($items->toArray(), [
+        [
+            'product_id' => Product::inRandomOrder()->first()->id,
+            'quantity' => faker()->numberBetween(1, 10),
+            'price' => faker()->numberBetween(1, 10),
+        ]
+    ]);
+
     $payload = array_merge($payload, [
-        'items' => $items->toArray()
+        'items' => $items
     ]);
 
     authenticated()
@@ -118,18 +128,21 @@ it('can update a delivery', function () {
                 'supplier',
                 'items',
                 'dr_number',
-                'received_by',
+                'receiver',
                 'received_at',
                 'created_at',
                 'updated_at',
             ],
         ]);
 
-    collect($delivery->transactions)->each(function (Transaction $transaction) {
-        assertSoftDeleted('transactions', [
-            'id' => $transaction->id,
-        ]);
-    });
+    collect($items)->each(fn ($item) =>
+        assertDatabaseHas('transactions', [
+            'transactable_id' => $delivery->id,
+            'product_id' => $item['product_id'],
+            'quantity' => $item['quantity'],
+            'price' => $item['price'],
+        ])
+    );
 });
 
 it('can delete a delivery', function () {

@@ -8,6 +8,8 @@ use App\Http\Requests\DeliveryRequest;
 use App\Http\Resources\DeliveryResource;
 use App\Models\Transaction;
 use Spatie\QueryBuilder\QueryBuilder;
+use App\Actions\CreateOrUpdateTransactionItems;
+use Illuminate\Support\Facades\DB;
 
 class DeliveryController extends Controller
 {
@@ -29,25 +31,20 @@ class DeliveryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\DeliveryRequest  $request
+     * @param \App\Actions\CreateOrUpdateTransactionItems  $createOrUpdateTransactionItems
      * @return \Illuminate\Http\Response
      */
-    public function store(DeliveryRequest $request)
+    public function store(DeliveryRequest $request, CreateOrUpdateTransactionItems $createOrUpdateTransactionItems)
     {
-        $delivery = Delivery::create($request->validated());
+        $delivery = DB::transaction(function () use ($request, $createOrUpdateTransactionItems) {
+            $delivery = Delivery::create($request->validated());
 
-        $items = collect($request->items)
-            ->map(fn ($item) =>
-                new Transaction([
-                    'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price'],
-                ])
-            )
-            ->all();
+            $createOrUpdateTransactionItems->execute($delivery, $request->collect('items'));
 
-        $delivery->transactions()->saveMany($items);
+            return $delivery;
+        });
 
-        return new DeliveryResource($delivery->load('supplier', 'transactions'));
+        return new DeliveryResource($delivery->load('supplier', 'transactions', 'receiver'));
     }
 
     /**
@@ -66,27 +63,20 @@ class DeliveryController extends Controller
      *
      * @param  \App\Http\Requests\DeliveryRequest  $request
      * @param  \App\Models\Delivery  $delivery
+     * @param \App\Actions\CreateOrUpdateTransactionItems  $createOrUpdateTransactionItems
      * @return \Illuminate\Http\Response
      */
-    public function update(DeliveryRequest $request, Delivery $delivery)
+    public function update(DeliveryRequest $request, Delivery $delivery, CreateOrUpdateTransactionItems $createOrUpdateTransactionItems)
     {
-        $delivery->update($request->validated());
+        $delivery = DB::transaction(function () use ($request, $delivery, $createOrUpdateTransactionItems) {
+            $delivery->update($request->validated());
 
-        $delivery->transactions()->delete();
+            $createOrUpdateTransactionItems->execute($delivery, $request->collect('items'));
 
-        $items = collect($request->items)
-            ->map(fn ($item) =>
-                new Transaction([
-                    'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price'],
-                ])
-            )
-            ->all();
+            return $delivery;
+        });
 
-        $delivery->transactions()->saveMany($items);
-
-        return new DeliveryResource($delivery->load('supplier', 'transactions'));
+        return new DeliveryResource($delivery->load('supplier', 'transactions', 'receiver'));
     }
 
     /**
