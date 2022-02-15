@@ -12,6 +12,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DeliveryTransactionController;
+use App\Http\Controllers\OrderTransactionController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 
@@ -32,6 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::apiResource('products', ProductController::class);
     Route::apiResource('deliveries', DeliveryController::class);
     Route::delete('deliveries/{delivery}/transactions/{transaction:id}', DeliveryTransactionController::class)->name('deliveries.transactions.destroy');
+    Route::delete('sales/{delivery}/transactions/{transaction:id}', OrderTransactionController::class)->name('sales.transactions.destroy');
     Route::apiResource('sales', SaleController::class);
     Route::apiResource('clients', ClientController::class);
 });

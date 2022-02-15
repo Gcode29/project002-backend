@@ -19,7 +19,7 @@ class SaleController extends Controller
     public function index()
     {
         $sales = QueryBuilder::for(Sale::class)
-            ->allowedIncludes(['transactions', 'transactions.product'])
+            ->allowedIncludes(['transactions', 'transactions.product', 'receiver', 'client' ])
             ->paginate(request()->per_page);
 
         return SaleResource::collection($sales);

@@ -28,6 +28,10 @@ class SaleRequest extends FormRequest
         return [
             'invoice' => ['sometimes', 'nullable'],
             'or_number' => ['sometimes', 'nullable'],
+            'amount' => ['required'],
+            'payment_method' => ['nullable'],
+            // paid_at "DATENOW() if CASH"
+            'paid_at' => ['nullable'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_id' => [
                 'required',

@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Sale extends Model
 {
@@ -15,6 +16,8 @@ class Sale extends Model
     protected $fillable = [
         'invoice',
         'or_number',
+        'payment_method',
+        'amount',
     ];
 
     public function transactions(): MorphMany
@@ -34,5 +37,15 @@ class Sale extends Model
         static::deleting(function ($model) {
             $model->transactions()->delete();
         });
+    }
+
+        public function receiver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sold_by');
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 }
