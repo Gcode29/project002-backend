@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::apiResource('products', ProductController::class);
     Route::apiResource('deliveries', DeliveryController::class);
     Route::delete('deliveries/{delivery}/transactions/{transaction:id}', DeliveryTransactionController::class)->name('deliveries.transactions.destroy');
-    Route::delete('sales/{delivery}/transactions/{transaction:id}', OrderTransactionController::class)->name('sales.transactions.destroy');
+    Route::delete('sales/{sale}/transactions/{transaction:id}', OrderTransactionController::class)->name('sales.transactions.destroy');
     Route::apiResource('sales', SaleController::class);
     Route::apiResource('clients', ClientController::class);
 });
