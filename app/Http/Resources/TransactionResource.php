@@ -26,7 +26,7 @@ class TransactionResource extends JsonResource
         ];
     }
 
-    private function transactableQuantity()
+    private function transactableQuantity(): int
     {
         return $this->transactable()->getParent()->transactable_type === (new Sale)->getMorphClass()
             ? abs($this->quantity)
