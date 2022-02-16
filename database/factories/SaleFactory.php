@@ -16,6 +16,7 @@ class SaleFactory extends Factory
         return [
             'invoice' => $this->faker->randomNumber(6),
             'or_number' => $this->faker->randomNumber(6),
+            'amount' => $this->faker->randomFloat(2, 0.3, 100),
         ];
     }
 }

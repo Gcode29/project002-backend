@@ -42,7 +42,7 @@ it('shows a specific sale', function () {
     $sale = Sale::factory()
         ->has(Transaction::factory()->state([
             'product_id' => Product::first()->id,
-            'quantity' => -10,
+            'quantity' => 10,
             'price' => faker()->numberBetween(0.01, 1000),
         ]))
         ->create();
@@ -102,7 +102,7 @@ it('can update a sale', function () {
     $sale = Sale::factory()
         ->has(Transaction::factory()->state([
             'product_id' => Product::first()->id,
-            'quantity' => -10,
+            'quantity' => 10,
             'price' => faker()->numberBetween(0.01, 1000),
         ]))
         ->create();
@@ -118,7 +118,7 @@ it('can update a sale', function () {
         'items' => [
             [
                 'product_id' => Product::first()->id,
-                'quantity' => 20,
+                'quantity' => 10,
                 'price' => faker()->numberBetween(0.01, 1000),
             ]
         ],
@@ -147,7 +147,7 @@ it('can delete a sale', function () {
     $sale = Sale::factory()
         ->has(Transaction::factory()->state([
             'product_id' => Product::first()->id,
-            'quantity' => -10,
+            'quantity' => 10,
             'price' => faker()->numberBetween(0.01, 1000),
         ]))
         ->create();

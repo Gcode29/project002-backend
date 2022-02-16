@@ -39,7 +39,7 @@ class Sale extends Model
         });
     }
 
-        public function receiver(): BelongsTo
+    public function receiver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'sold_by');
     }

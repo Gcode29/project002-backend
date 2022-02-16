@@ -36,29 +36,13 @@ class SaleController extends Controller
      */
     public function store(SaleRequest $request, CreateOrUpdateTransactionItems $createOrUpdateTransactionItems)
     {
-        // $sale = Sale::create($request->validated());
-
-        // $items = collect($request->items)
-        //     ->map(fn ($item) =>
-        //         new Transaction([
-        //             'product_id' => $item['product_id'],
-        //             'quantity' => -abs($item['quantity']),
-        //             'price' => $item['price'],
-        //         ])
-        //     )
-        //     ->all();
-
-        // $sale->transactions()->saveMany($items);
-
-        // return new SaleResource($sale->load('transactions'));
-
         $sale = DB::transaction(function () use ($request, $createOrUpdateTransactionItems) {
             $sale = Sale::create($request->validated());
             $createOrUpdateTransactionItems->execute($sale, $request->collect('items'));
             return $sale;
         });
 
-            return new SaleResource($sale->load('client', 'transactions', 'receiver'));
+        return new SaleResource($sale->load('client', 'transactions', 'receiver'));
     }
 
     /**
@@ -81,33 +65,14 @@ class SaleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(SaleRequest $request, Sale $sale, CreateOrUpdateTransactionItems $createOrUpdateTransactionItems)
-
     {
-        // $sale->update($request->validated());
-
-        // $sale->transactions()->delete();
-
-        // $items = collect($request->items)
-        //     ->map(fn ($item) =>
-        //         new Transaction([
-        //             'product_id' => $item['product_id'],
-        //             'quantity' => -abs($item['quantity']),
-        //             'price' => $item['price'],
-        //         ])
-        //     )
-        //     ->all();
-
-        // $sale->transactions()->saveMany($items);
-
-        // return new SaleResource($sale->load('transactions'));
-
         $sale = DB::transaction(function () use ($request, $sale, $createOrUpdateTransactionItems) {
             $sale->update($request->validated());
             $createOrUpdateTransactionItems->execute($sale, $request->collect('items'));
             return $sale;
         });
 
-        return new SaleResource($sale->load('supplier', 'transactions', 'receiver'));
+        return new SaleResource($sale->load('client', 'transactions', 'receiver'));
     }
 
     /**

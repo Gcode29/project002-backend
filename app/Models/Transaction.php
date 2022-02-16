@@ -33,4 +33,17 @@ class Transaction extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function (Transaction $transaction) {
+            if ($transaction->transactable()->getParent()->transactable_type === (new Sale)->getMorphClass()) {
+                $transaction->quantity = -$transaction->quantity;
+            } else {
+                $transaction->quantity = $transaction->quantity;
+            }
+        });
+    }
 }
