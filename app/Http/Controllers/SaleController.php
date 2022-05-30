@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SaleResource;
 use App\Models\Sale;
+use App\Models\Delivery;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleRequest;
-use App\Models\Transaction;
+use App\Http\Resources\SaleResource;
+use Illuminate\Database\Eloquent\Builder;
 
 class SaleController extends Controller
 {
@@ -17,7 +19,7 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $sales = Sale::paginate();
+        $sales = Sale::with('transactions')->paginate();
 
         return SaleResource::collection($sales);
     }
@@ -33,13 +35,24 @@ class SaleController extends Controller
         $sale = Sale::create($request->validated());
 
         $items = collect($request->items)
-            ->map(fn ($item) =>
-                new Transaction([
+            ->map(function ($item) {
+                $product = Transaction::whereHasMorph(
+                    'transactable', 
+                    Delivery::class, 
+                    function (Builder $query) use ($item) {
+                        $query->where('product_id', $item['product_id']);
+                    }
+                )
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+                return new Transaction([
                     'product_id' => $item['product_id'],
                     'quantity' => -abs($item['quantity']),
                     'price' => $item['price'],
-                ])
-            )
+                    'unit_cost' => $product->price
+                ]);
+            })
             ->all();
 
         $sale->transactions()->saveMany($items);

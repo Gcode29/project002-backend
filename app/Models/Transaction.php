@@ -16,12 +16,14 @@ class Transaction extends Model
     protected $fillable = [
         'product_id',
         'quantity',
-        'price'
+        'price',
+        'unit_cost'
     ];
 
     protected $casts = [
         'quantity' => 'integer',
-        'price' => 'float'
+        'price' => 'float',
+        'unit_cost' => 'float'
     ];
 
     public function transactable(): MorphTo

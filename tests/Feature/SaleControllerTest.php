@@ -67,7 +67,7 @@ it('shows a specific sale', function () {
 });
 
 it('can create a sale', function () {
-    ray(Product::with('transactions')->first());
+    $this->withoutExceptionHandling();
 
     $payload = Sale::factory()->make();
 

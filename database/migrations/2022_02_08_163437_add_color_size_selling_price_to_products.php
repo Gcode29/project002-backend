@@ -14,11 +14,11 @@ class AddColorSizeSellingPriceToProducts extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('code')->nullable()->change();
-            $table->string('unique_name')->nullable();
-            $table->string('color')->nullable();
-            $table->string('size')->nullable();
-            $table->decimal('selling_price', 8, 2)->default(0);
+            // $table->string('code')->nullable()->change();
+            // $table->string('unique_name')->nullable();
+            // $table->string('color')->nullable();
+            // $table->string('size')->nullable();
+            // $table->decimal('selling_price', 8, 2)->default(0);
         });
     }
 

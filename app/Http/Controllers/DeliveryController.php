@@ -17,7 +17,7 @@ class DeliveryController extends Controller
      */
     public function index()
     {
-        $deliveries = Delivery::with('supplier')->paginate();
+        $deliveries = Delivery::with('supplier','transactions')->paginate();
 
         return DeliveryResource::collection($deliveries);
     }
