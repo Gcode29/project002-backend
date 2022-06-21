@@ -18,7 +18,6 @@ use App\Http\Controllers\UserController;
 Route::post('login', [AuthController::class, 'store'])->name('login');
 Route::post('register', [AuthController::class, 'register']);
 
-
 Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('me', [AuthController::class, 'me'])->name('me');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -31,7 +30,10 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::apiResource('locations', LocationController::class);
     Route::apiResource('products', ProductController::class);
     Route::apiResource('deliveries', DeliveryController::class);
+    
+    Route::get('sales-view/{sale}', [SaleController::class, 'viewSale'])->name('sales-view');
     Route::apiResource('sales', SaleController::class);
+
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('transactions', TransactionController::class);
 });

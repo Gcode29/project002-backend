@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Sale extends Model
 {
@@ -20,6 +21,11 @@ class Sale extends Model
     public function transactions(): MorphMany
     {
         return $this->morphMany(Transaction::class, 'transactable');
+    }
+
+    public function products(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
     }
 
     public static function boot(): void

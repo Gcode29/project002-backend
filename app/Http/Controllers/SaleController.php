@@ -111,4 +111,15 @@ class SaleController extends Controller
 
         return response()->noContent();
     }
+
+    public function viewSale($id)
+    {
+        $sales = Sale::with('transactions.products')->where('invoice', $id)->get();
+
+        // $sales = Transaction::with('product')->where('transactable_id', $id)->get();
+        
+        // dd($sales);
+        // return SaleResource::collection($sales);
+        return $sales;
+    }
 }

@@ -14,7 +14,7 @@ class AddUnitCostToTransactionsTable extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            // $table->bigInteger('unit_cost')->default(0);
+            $table->bigInteger('unit_cost')->default(0);
             $table->unsignedInteger('status')->default(1);
             // 1 for payment
             // 2 pending
