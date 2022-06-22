@@ -19,13 +19,13 @@ class SaleResource extends JsonResource
             'invoice' => $this->invoice,
             'or_number' => $this->or_number,
             'payment_method' => $this->payment_method,
-            'amount' => $this->amount,
             'deleted_at' => $this->deleted_at,
             'items' => TransactionResource::collection($this->whenLoaded('transactions')),
             'sold_by' => UserResource::make($this->whenLoaded('receiver')),
             'sold_at' => $this->sold_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'total' => abs($this->transactions->sum('total')),
         ];
     }
 }
